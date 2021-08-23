@@ -90,4 +90,14 @@ function handleTouchStart(e) {
     const x = e.touches[0].clientX - control.getBoundingClientRect().x;
     const y = e.touches[0].clientY - control.getBoundingClientRect().y;
     console.log(x, y);
+
+    if (x < 300/2 && x < y) {
+        console.log('left');
+    } else if (y < 300/2) {
+        console.log('right')
+    } else if ( x > 300/2 && x > y) {
+        console.log('up')
+    } else {
+        console.log('down');
+    }
 }
