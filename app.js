@@ -12,6 +12,7 @@ let control;
 let pacman;
 let position = PACMAN_START;
 let currentDirection = 'right';
+let intervalId;
 
 const temp = console.log;
 console.log = (function () {
@@ -54,6 +55,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     control.className = 'control';
 
     control.addEventListener('touchstart', handleTouchStart, false);
+    control.addEventListener('touchmove', handleTouchStart, false);
+    control.addEventListener('touchend', handleTouchEnd, false);
 
     document.body.appendChild(control);
 
@@ -145,25 +148,28 @@ document.onkeydown = function(e) {
 
 
 function handleTouchStart(e) {
-    const x = e.touches[0].clientX - control.getBoundingClientRect().x;
-    const y = e.touches[0].clientY - control.getBoundingClientRect().y;
-    console.log(x, y);
+    clearInterval(intervalId);
+    intervalId = setInterval(() => {
+        const x = e.touches[0].clientX - control.getBoundingClientRect().x;
+        const y = e.touches[0].clientY - control.getBoundingClientRect().y;
+        console.log(x, y);
 
-    if (Math.abs(y - 150) > Math.abs(x - 150)) {
-        if (y < 150) {
-            console.log('up', x, y)
-            move('up');
+        if (Math.abs(y - 150) > Math.abs(x - 150)) {
+            if (y < 150) {
+                move('up');
+            } else {
+                move('down');
+            }
         } else {
-            console.log('down', x, y)
-            move('down');
+            if (x < 150) {
+                move('left');
+            } else {
+                move('right');
+            }
         }
-    } else {
-        if (x < 150) {
-            console.log('left', x , y);
-            move('left');
-        } else {
-            console.log('right', x , y);
-            move('right');
-        }
-    }
+    }, 10);
+}
+
+function handleTouchEnd(e) {
+    clearInterval(intervalId)
 }
