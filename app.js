@@ -81,3 +81,9 @@ function toggleClass(el, cls) {
         el.className = [...clss, cls].join(' ')
     }
 }
+
+document.addEventListener('touchstart', handleTouchStart, false);
+
+function handleTouchStart(e) {
+    console.log(JSON.stringify(e));
+}
