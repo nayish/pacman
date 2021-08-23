@@ -7,6 +7,7 @@ const PACMAN_START = [2,2];
 const CELL_SIZE = 60;
 const PACMAN_HEIGHT = 60;
 
+let control;
 let pacman;
 let postion = PACMAN_START;
 
@@ -47,7 +48,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     board.appendChild(pacman);
 
-    const control = document.createElement("div");
+    control = document.createElement("div");
     control.className = 'control';
 
     document.body.appendChild(control);
@@ -82,7 +83,7 @@ function toggleClass(el, cls) {
     }
 }
 
-document.addEventListener('touchstart', handleTouchStart, false);
+control.addEventListener('touchstart', handleTouchStart, false);
 
 function handleTouchStart(e) {
     console.log(JSON.stringify(e));
