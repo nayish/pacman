@@ -7,6 +7,7 @@ const PACMAN_START = [2,2];
 const CELL_SIZE = 60;
 const PACMAN_HEIGHT = 60;
 const STEP_TIME = 300;
+const ANIMATION_SPEED = 100;
 
 let control;
 let pacman;
@@ -81,7 +82,7 @@ setInterval(() => {
     if (pacman) {
         toggleClass(pacman, 'open');
     }
-}, 300);
+}, ANIMATION_SPEED);
 
 function toggleClass(el, cls) {
     const clss = el.className.split(' ');
