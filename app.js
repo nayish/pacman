@@ -85,6 +85,6 @@ function toggleClass(el, cls) {
     }
 }
 
-function handleTouchStart(e) {
+function handleTouchStart(...e) {
     console.log(JSON.stringify(e));
 }
