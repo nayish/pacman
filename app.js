@@ -86,5 +86,7 @@ function toggleClass(el, cls) {
 }
 
 function handleTouchStart(e) {
-    console.log(JSON.stringify(e.touches));
+    const x = e.touches[0].clientX;
+    const y = e.touches[0].clientY;
+    console.log(x, y);
 }
