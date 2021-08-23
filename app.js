@@ -24,7 +24,7 @@ console.log = (function () {
     });
 
     return (...args) => {
-        console.innerText += `${args.join(' ')}\n`;
+        console.innerText = `${args.join(' ')}`;
         temp(...args);
     }
 }());
@@ -86,7 +86,7 @@ function toggleClass(el, cls) {
 }
 
 function handleTouchStart(e) {
-    const x = e.touches[0].clientX;
-    const y = e.touches[0].clientY;
+    const x = e.touches[0].x;
+    const y = e.touches[0].y;
     console.log(x, y);
 }
