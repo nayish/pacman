@@ -59,7 +59,7 @@ function positionPacman([x,y]) {
 
 function isDebug() {
     const res = window.location.href.split('?')[1]?.split('&').map(a => a.split('=')).filter(a => a[0] === 'debug');
-    return res.length > 0 && res[0][1] !== 'false';
+    return res?.length > 0 && res[0][1] !== 'false';
 }
 setInterval(() => {
     if (pacman) {
