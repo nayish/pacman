@@ -1,0 +1,43 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+}
+
+.console {
+    background: rgba(255,0,0,0.1);
+    font-size: 14px;
+    padding: 5px 10px;
+    max-height: 50px;
+    overflow-y: auto;
+}
+.board {
+    position: relative;
+    background: yellow;
+    width: 900px;
+    margin: auto;
+}
+
+.cell {
+    background: blue;
+    width: 60px;
+    height: 60px;
+    border: 1px solid black;
+    display: inline-block;
+}
+.pacman {
+    top: 0;
+    left: 0;
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background: url(pacman_sprite.png) 0px -87px;
+    background-size: 356px;
+}
+
+.pacman.open {
+    background: url(pacman_sprite.png) -68px -87px;
+    background-size: 356px;
+}
