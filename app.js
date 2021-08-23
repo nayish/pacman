@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const control = document.createElement("div");
     control.className = 'control';
 
-    body.appendChild(control);
+    document.body.appendChild(control);
 
     // setTimeout(() => {
     //     postion = [4,4];
