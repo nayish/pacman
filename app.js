@@ -51,6 +51,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     control = document.createElement("div");
     control.className = 'control';
 
+    control.addEventListener('touchstart', handleTouchStart, false);
+
     document.body.appendChild(control);
 
     // setTimeout(() => {
@@ -82,8 +84,6 @@ function toggleClass(el, cls) {
         el.className = [...clss, cls].join(' ')
     }
 }
-
-control.addEventListener('touchstart', handleTouchStart, false);
 
 function handleTouchStart(e) {
     console.log(JSON.stringify(e));
