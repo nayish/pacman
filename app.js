@@ -93,9 +93,9 @@ function handleTouchStart(e) {
 
     if (x < 300/2 && x < y) {
         console.log('left');
-    } else if (y < 300/2) {
+    } else if (x > 300/2 && x > y) {
         console.log('right')
-    } else if ( x > 300/2 && x > y) {
+    } else if (y > 300/2) {
         console.log('up')
     } else {
         console.log('down');
