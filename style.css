@@ -22,7 +22,7 @@ body {
 .cell {
     width: 60px;
     height: 60px;
-    border: 1px solid #fcfcfc;
+    border: 1px solid #cccccc;
     display: inline-block;
 }
 .pacman {
