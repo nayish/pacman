@@ -15,16 +15,14 @@ body {
 }
 .board {
     position: relative;
-    background: yellow;
     width: 900px;
     margin: auto;
 }
 
 .cell {
-    background: blue;
     width: 60px;
     height: 60px;
-    border: 1px solid black;
+    border: 1px solid #fcfcfc;
     display: inline-block;
 }
 .pacman {
@@ -40,4 +38,12 @@ body {
 .pacman.open {
     background: url(pacman_sprite.png) -68px -87px;
     background-size: 356px;
+}
+
+.control {
+    width:300px;
+    height:300px;
+    background: lightblue;
+    border-radius:150px;
+    border: 1px solid black;
 }
