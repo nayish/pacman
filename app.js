@@ -45,7 +45,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     pacman.className = 'pacman';
     positionPacman(postion);
 
-    board.appendChild(pacman)
+    board.appendChild(pacman);
+
+    const control = document.createElement("div");
+    control.className = 'control';
+
+    body.appendChild(control);
 
     // setTimeout(() => {
     //     postion = [4,4];
