@@ -91,13 +91,17 @@ function handleTouchStart(e) {
     const y = e.touches[0].clientY - control.getBoundingClientRect().y;
     console.log(x, y);
 
-    if (x < 300/2 && x < y) {
-        console.log('left', x , y);
-    } else if (x > 300/2 && x > y) {
-        console.log('right', x , y)
-    } else if (y > 300/2) {
-        console.log('down', x, y)
+    if (Math.abs(y - 150) > Math.abs(x - 150)) {
+        if (y < 150) {
+            console.log('up', x, y)
+        } else {
+            console.log('down', x, y)
+        }
     } else {
-        console.log('up', x , y);
+        if (x < 150) {
+            console.log('left', x , y);
+        } else {
+            console.log('right', x , y);
+        }
     }
 }
