@@ -40,6 +40,18 @@ body {
     background-size: 356px;
 }
 
+.pacman.open.up {
+    transform: rotate(270deg);
+}
+
+.pacman.open.down {
+    transform: rotate(90deg);
+}
+
+.pacman.open.left {
+    transform: rotate(180deg);
+}
+
 .control {
     width:300px;
     height:300px;
