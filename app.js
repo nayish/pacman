@@ -55,6 +55,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     document.body.appendChild(control);
 
+
     // setTimeout(() => {
     //     postion = [4,4];
     //     positionPacman(postion);
@@ -86,7 +87,7 @@ function toggleClass(el, cls) {
 }
 
 function handleTouchStart(e) {
-    const x = e.touches[0].x;
-    const y = e.touches[0].y;
+    const x = e.touches[0].clientX - control.getBoundingClientRect().x;
+    const y = e.touches[0].clientY - control.getBoundingClientRect().y;
     console.log(x, y);
 }
