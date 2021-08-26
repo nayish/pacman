@@ -35,14 +35,15 @@ body {
 .pacman {
     background: url(pacman_sprite.png) -265px -3px;
     background-size: 720px;
+    animation: pacman 2s steps(4) infinite;
 }
 
-.pacman.animate-1, .pacman.animate-3 {
+.pacman.animate-14, .pacman.animate-34 {
     background: url(pacman_sprite.png) -3px -3px;
     background-size: 720px;
 }
 
-.pacman.animate-2 {
+.pacman.animate-24 {
     background: url(pacman_sprite.png) -3px -69px;
     background-size: 720px;
 }
@@ -109,6 +110,25 @@ body {
 .points-400 {
     background: url(pacman_sprite.png) -135px -465px;
     background-size: 720px;
+}
+
+@keyframes pacman {
+     0{
+         background: url(pacman_sprite.png) -265px -3px;
+         background-size: 720px;
+     }
+     1{
+         background: url(pacman_sprite.png) -3px -3px;
+         background-size: 720px;
+     }
+     2{
+         background: url(pacman_sprite.png) -3px -69px;
+         background-size: 720px;
+     }
+     3{
+         background: url(pacman_sprite.png) -3px -3px;
+         background-size: 720px;
+     }
 }
 
 @keyframes disappear{
