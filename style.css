@@ -35,7 +35,7 @@ body {
 .pacman {
     background: url(pacman_sprite.png) -265px -3px;
     background-size: 720px;
-    animation: pacman 2s steps(4) infinite;
+    animation: pacman 2s steps(3) infinite alternate;
 }
 
 .pacman.animate-14, .pacman.animate-34 {
@@ -117,16 +117,12 @@ body {
          background: url(pacman_sprite.png) -265px -3px;
          background-size: 720px;
      }
-     25%{
-         background: url(pacman_sprite.png) -3px -3px;
-         background-size: 720px;
-     }
      50%{
-         background: url(pacman_sprite.png) -3px -69px;
+         background: url(pacman_sprite.png) -3px -3px;
          background-size: 720px;
      }
-     75%{
-         background: url(pacman_sprite.png) -3px -3px;
+     100%{
+         background: url(pacman_sprite.png) -3px -69px;
          background-size: 720px;
      }
 }
