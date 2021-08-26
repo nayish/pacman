@@ -113,19 +113,19 @@ body {
 }
 
 @keyframes pacman {
-     0{
+     0%{
          background: url(pacman_sprite.png) -265px -3px;
          background-size: 720px;
      }
-     1{
+     25%{
          background: url(pacman_sprite.png) -3px -3px;
          background-size: 720px;
      }
-     2{
+     50%{
          background: url(pacman_sprite.png) -3px -69px;
          background-size: 720px;
      }
-     3{
+     75%{
          background: url(pacman_sprite.png) -3px -3px;
          background-size: 720px;
      }
