@@ -1,6 +1,7 @@
 html,
 body {
     overscroll-behavior-y: contain;
+    background: #2A2A2A;
 }
 
 * {
@@ -20,6 +21,7 @@ body {
 }
 .board {
     position: relative;
+    background: #101010;
     width: 900px;
     margin: auto;
 }
@@ -27,41 +29,110 @@ body {
 .cell {
     width: 60px;
     height: 60px;
-    border: 1px solid #eeeeee;
+    border: 1px solid #2A2A2A;
     display: inline-block;
 }
 .pacman {
+    background: url(pacman_sprite.png) -265px -3px;
+    background-size: 720px;
+}
+
+.pacman.animate-1, .pacman.animate-3 {
+    background: url(pacman_sprite.png) -3px -3px;
+    background-size: 720px;
+}
+
+.pacman.animate-2 {
+    background: url(pacman_sprite.png) -3px -69px;
+    background-size: 720px;
+}
+
+.pacman.down {
+    transform: rotate(270deg);
+}
+
+.pacman.up {
+    transform: rotate(90deg);
+}
+
+.pacman.right {
+    transform: rotate(180deg);
+}
+
+.element {
     top: 0;
     left: 0;
     position: absolute;
     width: 60px;
     height: 60px;
-    background: url(pacman_sprite.png) 0px -87px;
-    background-size: 356px;
 }
 
-.pacman.open {
-    background: url(pacman_sprite.png) -68px -87px;
-    background-size: 356px;
+.score {
+    text-align: right;
+    padding: 5px;
+    font-size: 30px;
+    color: yellow;
+    font-family: "Black Ops One";
+    margin: auto;
 }
 
-.pacman.open.up {
-    transform: rotate(270deg);
+.cherry {
+    background: url(pacman_sprite.png) 191px -132px;
+    background-size: 720px;
 }
 
-.pacman.open.down {
-    transform: rotate(90deg);
+.apple {
+    background: url(pacman_sprite.png) 62px -133px;
+    background-size: 720px;
 }
 
-.pacman.open.left {
-    transform: rotate(180deg);
+.banana {
+    background: url(pacman_sprite.png) 130px -135px;
+    background-size: 720px;
+}
+
+.points {
+    animation: disappear 2s;
+    animation-fill-mode: forwards;
+}
+
+.points-100 {
+    background: url(pacman_sprite.png) -3px -465px;
+    background-size: 720px;
+}
+
+.points-200 {
+    background: url(pacman_sprite.png) -64px -465px;
+    background-size: 720px;
+}
+
+.points-400 {
+    background: url(pacman_sprite.png) -135px -465px;
+    background-size: 720px;
+}
+
+@keyframes disappear{
+    0%{
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
 }
 
 .control {
     width:300px;
     height:300px;
     background: lightgrey;
-    border-radius:150px;
+    border-radius: 150px;
     border: 1px solid black;
     margin: 10px auto;
+}
+
+@media screen and (min-device-width: 1200px) {
+    .control {
+        width: 200px;
+        height: 200px;
+    }
 }

@@ -3,17 +3,46 @@ const debug = isDebug();
 const NUMBER_OF_COLUMNS = 15;
 const NUMBER_OF_ROWS = 10;
 
-const PACMAN_START = [2,2];
 const CELL_SIZE = 60;
-const PACMAN_HEIGHT = 60;
-const STEP_TIME = 300;
-const ANIMATION_SPEED = 200;
+const ELEMENT_HEIGHT = 60;
+const STEP_TIME = 200;
+const ANIMATION_SPEED = 100;
+let CONTROL_HEIGHT = 300;
 
 let control;
-let pacman;
-let position = PACMAN_START;
-let currentDirection = 'right';
+let score = 0;
+let board;
+let scoreElement;
+
+let types = {
+    pacman: {name: 'pacman', animationSteps: 4},
+    cherry: {name: 'cherry', animationSteps: 1, points: 100},
+    apple: {name: 'apple', animationSteps: 1, points: 200},
+    banana: {name: 'banana', animationSteps: 1, points: 400},
+}
+
+const nextMovePoints = [];
+
 let intervalId;
+let mouseDown;
+
+class Element {
+    constructor(name, type, position) {
+        this.name = name;
+        this.type = type;
+        this.position = position;
+        this.currentDirection = 'left';
+        this.animateStep = 0;
+        this.element = undefined;
+    }
+}
+
+let elements = {
+    player1: new Element('player1', types.pacman, [2,2]),
+    cherry: new Element('cherry', types.cherry, [1,2]),
+    apple: new Element('cherry', types.apple, [1,1]),
+    banana: new Element('cherry', types.banana, [0,2]),
+}
 
 const temp = console.log;
 console.log = (function () {
@@ -34,8 +63,16 @@ console.log = (function () {
 }());
 
 document.addEventListener('DOMContentLoaded', async () => {
-    const board = document.createElement("div");
+    scoreElement = document.createElement("div");
+    scoreElement.className = 'score';
+    scoreElement.style = `width: ${CELL_SIZE * NUMBER_OF_COLUMNS}px`;
+    document.body.appendChild(scoreElement);
+
+    printScore();
+
+    board = document.createElement("div");
     board.className = 'board';
+    board.style = `width: ${CELL_SIZE * NUMBER_OF_COLUMNS}px`;
     document.body.appendChild(board);
 
     for (let i=0; i < NUMBER_OF_COLUMNS; i++) {
@@ -46,32 +83,40 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    pacman = document.createElement("div");
-    pacman.className = 'pacman';
-    positionPacman(position);
+    Object.values(elements).forEach(el => {
+        const element = document.createElement("div");
+        element.className = `${el.type.name} element`;
 
-    board.appendChild(pacman);
+        board.appendChild(element);
+
+        el.element = element;
+    });
+
+    positionElements();
 
     control = document.createElement("div");
     control.className = 'control';
 
+    control.addEventListener('mousedown', handleMouseDown, false);
+    window.addEventListener('mousemove', handleMouseMove, false);
+    window.addEventListener('mouseup', handleTouchEnd, false);
     control.addEventListener('touchstart', handleTouchStart, false);
     control.addEventListener('touchmove', handleTouchStart, false);
     control.addEventListener('touchend', handleTouchEnd, false);
 
     document.body.appendChild(control);
-
-
-    // setTimeout(() => {
-    //     position = [4,4];
-    //     positionPacman(position);
-    // },400)
+    setTimeout(() => {
+        CONTROL_HEIGHT = control.offsetHeight;
+        console.log(CONTROL_HEIGHT)
+    })
 });
 
-function positionPacman([x,y]) {
-    pacman.style = `left: ${x * CELL_SIZE + (CELL_SIZE-PACMAN_HEIGHT)/2}; top: ${y * CELL_SIZE  + (CELL_SIZE-PACMAN_HEIGHT)/2};`
-    removeClasses(pacman, ['left', 'right', 'up', 'down']);
-    addClass(pacman, currentDirection);
+function positionElements() {
+    Object.values(elements).forEach(({element, position, currentDirection}) => {
+        if (element) {
+            element.style = `left: ${position[0] * CELL_SIZE + (CELL_SIZE-ELEMENT_HEIGHT)/2}; top: ${position[1] * CELL_SIZE  + (CELL_SIZE-ELEMENT_HEIGHT)/2};`;
+        }
+    });
 }
 
 function isDebug() {
@@ -79,9 +124,14 @@ function isDebug() {
     return res?.length > 0 && res[0][1] !== 'false';
 }
 setInterval(() => {
-    if (pacman) {
-        toggleClass(pacman, 'open');
-    }
+    Object.values(elements).forEach((el) => {
+        const {element, animateStep, type: {animationSteps}} = el;
+        if (element && animationSteps > 1) {
+            removeClasses(element, [`animate-${animateStep}`]);
+            el.animateStep = (el.animateStep +1) % animationSteps;
+            addClass(el.element, `animate-${el.animateStep}`);
+        }
+    })
 }, ANIMATION_SPEED);
 
 function toggleClass(el, cls) {
@@ -118,17 +168,47 @@ const debounce = (callback, wait) => {
 
 
 const moveAction = {
-    left: () => position[0] = Math.max(0, position[0] -1),
-    right: () => position[0] = Math.min(NUMBER_OF_COLUMNS - 1, position[0] + 1),
-    up: () => position[1] = Math.max(0, position[1] -1),
-    down: () => position[1] = Math.min(NUMBER_OF_ROWS - 1, position[1] +1),
+    left: (element) => element.position[0] = Math.max(0, element.position[0] -1),
+    right: (element) => element.position[0] = Math.min(NUMBER_OF_COLUMNS - 1, element.position[0] + 1),
+    up: (element) => element.position[1] = Math.max(0, element.position[1] -1),
+    down: (element) => element.position[1] = Math.min(NUMBER_OF_ROWS - 1, element.position[1] +1),
 }
 
 const move = debounce((dir) => {
-    moveAction[dir]();
-    currentDirection = dir;
-    positionPacman(position);
+    performDir(dir)
+    checkClashes();
+    positionElements();
 }, STEP_TIME);
+
+function performDir(dir) {
+    moveAction[dir](elements.player1);
+    while (nextMovePoints.length) {
+        const {value, position} = nextMovePoints.pop();
+        const element = document.createElement("div");
+        element.className = `points-${value} points element`;
+        element.style = `left: ${position[0] * CELL_SIZE + (CELL_SIZE - ELEMENT_HEIGHT) / 2}; top: ${position[1] * CELL_SIZE + (CELL_SIZE - ELEMENT_HEIGHT) / 2};`;
+        board.appendChild(element);
+        setTimeout(() => element.remove(), 2000)
+    }
+    elements.player1.currentDirection = dir;
+    removeClasses(elements.player1.element, ['left', 'right', 'up', 'down']);
+    addClass(elements.player1.element, elements.player1.currentDirection);
+}
+
+function checkClashes() {
+    const {player1, ...els} = elements;
+    Object.values(els).forEach(el => {
+        if (el.position[0] === player1.position[0] && el.position[1] === player1.position[1]) {
+            const column = Math.floor(Math.random() * NUMBER_OF_COLUMNS);
+            const row = Math.floor(Math.random() * NUMBER_OF_ROWS);
+            const position = el.position;
+            el.position = [column, row];
+            score+= el.type.points;
+            printScore();
+            nextMovePoints.push({value: el.type.points, position})
+        }
+    });
+}
 
 document.onkeydown = function(e) {
     switch (e.keyCode) {
@@ -147,12 +227,38 @@ document.onkeydown = function(e) {
     }
 };
 
-
+function printScore() {
+    scoreElement.innerText = `${score}`
+}
 function handleTouchStart(e) {
     clearInterval(intervalId);
     intervalId = setInterval(() => {
         const x = e.touches[0].clientX - control.getBoundingClientRect().x;
         const y = e.touches[0].clientY - control.getBoundingClientRect().y;
+        console.log(x, y);
+
+        if (Math.abs(y - CONTROL_HEIGHT/2) > Math.abs(x - CONTROL_HEIGHT/2)) {
+            if (y < CONTROL_HEIGHT/2) {
+                move('up');
+            } else {
+                move('down');
+            }
+        } else {
+            if (x < CONTROL_HEIGHT/2) {
+                move('left');
+            } else {
+                move('right');
+            }
+        }
+    }, 10);
+}
+
+function handleMouseDown(e) {
+    mouseDown = true;
+    clearInterval(intervalId);
+    intervalId = setInterval(() => {
+        const x = e.clientX - control.getBoundingClientRect().x;
+        const y = e.clientY - control.getBoundingClientRect().y;
         console.log(x, y);
 
         if (Math.abs(y - 150) > Math.abs(x - 150)) {
@@ -171,6 +277,15 @@ function handleTouchStart(e) {
     }, 10);
 }
 
+
+function handleMouseMove(e) {
+    if (!mouseDown) {
+        return;
+    }
+    handleMouseDown(e);
+}
+
 function handleTouchEnd(e) {
+    mouseDown = false;
     clearInterval(intervalId)
 }
