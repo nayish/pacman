@@ -35,15 +35,15 @@ body {
 .pacman {
     background: url(pacman_sprite.png) -265px -3px;
     background-size: 720px;
-    animation: pacman 2s steps(3) infinite alternate;
+    /*animation: pacman 2s steps(3) infinite alternate;*/
 }
 
-.pacman.animate-14, .pacman.animate-34 {
+.pacman.animate-1, .pacman.animate-3 {
     background: url(pacman_sprite.png) -3px -3px;
     background-size: 720px;
 }
 
-.pacman.animate-24 {
+.pacman.animate-2 {
     background: url(pacman_sprite.png) -3px -69px;
     background-size: 720px;
 }
