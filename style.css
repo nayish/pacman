@@ -32,21 +32,90 @@ body {
     border: 1px solid #2A2A2A;
     display: inline-block;
 }
+
+.element {
+    top: 0;
+    left: 0;
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background-image: url(pacman_sprite.png);
+    background-size: 720px;
+}
+
+.ghost, .ghost.up {
+    transition: top 0.4s linear, left 0.4s linear;
+    background-position: -3px -135px;
+    animation: ghosting-up 1s steps(1, end) infinite;
+}
+
+.ghost.down {
+    background-position-x: -135px;
+    animation: ghosting-down 1s steps(1, end) infinite;
+}
+
+.ghost.left {
+    background-position-x: -265px;
+    animation: ghosting-left 1s steps(1, end) infinite;
+}
+
+.ghost.right {
+    background-position-x: -395px;
+    animation: ghosting-right 1s steps(1, end) infinite;
+}
+
+@keyframes ghosting-up{
+    0%{
+        background-position-x: -3px;
+    }
+
+    50% {
+        background-position-x: -68px;
+    }
+}
+
+@keyframes ghosting-down{
+    0%{
+        background-position-x: -135px;
+    }
+
+    50% {
+        background-position-x: -200px;
+    }
+}
+
+@keyframes ghosting-left{
+    0%{
+        background-position-x: -265px;
+    }
+
+    50% {
+        background-position-x: -330px;
+    }
+}
+
+@keyframes ghosting-right{
+    0%{
+        background-position-x: -395px;
+    }
+
+    50% {
+        background-position-x: -460px;
+    }
+}
+
 .pacman {
-    background: url(pacman_sprite.png) -265px -3px;
-    background-size: 720px;
+    background-position: -265px -3px;
     transition: top 0.2s linear, left 0.2s linear;
-    /*animation: pacman 2s steps(3) infinite alternate;*/
+    animation: pacman 0.15s steps(1) infinite alternate;
 }
 
-.pacman.animate-1, .pacman.animate-3 {
-    background: url(pacman_sprite.png) -3px -3px;
-    background-size: 720px;
+.pacman.animate-11, .pacman.animate-31 {
+    background-position: -3px -3px;
 }
 
-.pacman.animate-2 {
-    background: url(pacman_sprite.png) -3px -69px;
-    background-size: 720px;
+.pacman.animate-21 {
+    background-position: -3px -69px;
 }
 
 .pacman.down {
@@ -61,12 +130,22 @@ body {
     transform: rotate(180deg);
 }
 
-.element {
-    top: 0;
-    left: 0;
-    position: absolute;
-    width: 60px;
-    height: 60px;
+@keyframes pacman {
+    0%{
+        background-position: -265px -3px;
+    }
+    33%{
+        background-position: -3px -3px;
+    }
+    67%{
+        background-position: -3px -69px;
+    }
+    /*75%{*/
+    /*    background-position: -3px -3px;*/
+    /*}*/
+    /*100% {*/
+    /*    background-position: -265px -3px;*/
+    /*}*/
 }
 
 .score {
@@ -79,18 +158,15 @@ body {
 }
 
 .cherry {
-    background: url(pacman_sprite.png) 191px -132px;
-    background-size: 720px;
+    background-position: 191px -132px;
 }
 
 .apple {
-    background: url(pacman_sprite.png) 62px -133px;
-    background-size: 720px;
+    background-position: 62px -133px;
 }
 
 .banana {
-    background: url(pacman_sprite.png) 130px -135px;
-    background-size: 720px;
+    background-position: 130px -135px;
 }
 
 .points {
@@ -99,33 +175,15 @@ body {
 }
 
 .points-100 {
-    background: url(pacman_sprite.png) -3px -465px;
-    background-size: 720px;
+    background-position: -3px -465px;
 }
 
 .points-200 {
-    background: url(pacman_sprite.png) -64px -465px;
-    background-size: 720px;
+    background-position: -64px -465px;
 }
 
 .points-400 {
-    background: url(pacman_sprite.png) -135px -465px;
-    background-size: 720px;
-}
-
-@keyframes pacman {
-     0%{
-         background: url(pacman_sprite.png) -265px -3px;
-         background-size: 720px;
-     }
-     50%{
-         background: url(pacman_sprite.png) -3px -3px;
-         background-size: 720px;
-     }
-     100%{
-         background: url(pacman_sprite.png) -3px -69px;
-         background-size: 720px;
-     }
+    background-position: -135px -465px;
 }
 
 @keyframes disappear{

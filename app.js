@@ -6,8 +6,8 @@ const NUMBER_OF_ROWS = 10;
 const CELL_SIZE = 60;
 const ELEMENT_HEIGHT = 60;
 const STEP_TIME = 200;
-const ANIMATION_SPEED = 100;
 let CONTROL_HEIGHT = 300;
+const DIRECTIONS = ['left', 'right', 'up', 'down'];
 
 let control;
 let score = 0;
@@ -15,10 +15,11 @@ let board;
 let scoreElement;
 
 let types = {
-    pacman: {name: 'pacman', animationSteps: 4},
+    pacman: {name: 'pacman'},
     cherry: {name: 'cherry', animationSteps: 1, points: 100},
-    apple: {name: 'apple', animationSteps: 1, points: 200},
-    banana: {name: 'banana', animationSteps: 1, points: 400},
+    apple: {name: 'apple', points: 200},
+    banana: {name: 'banana', points: 400},
+    ghost: {name: 'ghost'},
 }
 
 const nextMovePoints = [];
@@ -32,13 +33,13 @@ class Element {
         this.type = type;
         this.position = position;
         this.currentDirection = 'left';
-        this.animateStep = 0;
         this.element = undefined;
     }
 }
 
 let elements = {
     player1: new Element('player1', types.pacman, [2,2]),
+    player2: new Element('player2', types.ghost, [3,4]),
     cherry: new Element('cherry', types.cherry, [1,2]),
     apple: new Element('cherry', types.apple, [1,1]),
     banana: new Element('cherry', types.banana, [0,2]),
@@ -123,16 +124,6 @@ function isDebug() {
     const res = window.location.href.split('?')[1]?.split('&').map(a => a.split('=')).filter(a => a[0] === 'debug');
     return res?.length > 0 && res[0][1] !== 'false';
 }
-setInterval(() => {
-    Object.values(elements).forEach((el) => {
-        const {element, animateStep, type: {animationSteps}} = el;
-        if (element && animationSteps > 1) {
-            removeClasses(element, [`animate-${animateStep}`]);
-            el.animateStep = (el.animateStep +1) % animationSteps;
-            addClass(el.element, `animate-${el.animateStep}`);
-        }
-    })
-}, ANIMATION_SPEED);
 
 function toggleClass(el, cls) {
     const clss = el.className.split(' ');
@@ -175,13 +166,24 @@ const moveAction = {
 }
 
 const move = debounce((dir) => {
-    performDir(dir)
-    checkClashes();
-    positionElements();
+    moveElement(elements.player1, dir, checkClashes);
 }, STEP_TIME);
 
-function performDir(dir) {
-    moveAction[dir](elements.player1);
+const moveElement = (el, dir, fn) => {
+    showPoints();
+    performDir(el, dir)
+    fn && fn();
+    positionElements();
+}
+
+function performDir(el, dir) {
+    moveAction[dir](el);
+    el.currentDirection = dir;
+    removeClasses(el.element, DIRECTIONS);
+    addClass(el.element, el.currentDirection);
+}
+
+function showPoints() {
     while (nextMovePoints.length) {
         const {value, position} = nextMovePoints.pop();
         const element = document.createElement("div");
@@ -190,13 +192,10 @@ function performDir(dir) {
         board.appendChild(element);
         setTimeout(() => element.remove(), 2000)
     }
-    elements.player1.currentDirection = dir;
-    removeClasses(elements.player1.element, ['left', 'right', 'up', 'down']);
-    addClass(elements.player1.element, elements.player1.currentDirection);
 }
 
 function checkClashes() {
-    const {player1, ...els} = elements;
+    const {player1, player2, ...els} = elements;
     Object.values(els).forEach(el => {
         if (el.position[0] === player1.position[0] && el.position[1] === player1.position[1]) {
             const column = Math.floor(Math.random() * NUMBER_OF_COLUMNS);
@@ -209,6 +208,11 @@ function checkClashes() {
         }
     });
 }
+
+setInterval(() => {
+    const dir = DIRECTIONS[Math.floor(Math.random()* DIRECTIONS.length)];
+    moveElement(elements.player2, dir);
+}, STEP_TIME*2);
 
 document.onkeydown = function(e) {
     switch (e.keyCode) {
