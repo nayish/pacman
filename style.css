@@ -35,6 +35,7 @@ body {
 .pacman {
     background: url(pacman_sprite.png) -265px -3px;
     background-size: 720px;
+transition: top 0.2s, left 0.2s;
     /*animation: pacman 2s steps(3) infinite alternate;*/
 }
 
