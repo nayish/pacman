@@ -46,7 +46,7 @@ body {
 .ghost, .ghost.up {
     transition: top 0.4s linear, left 0.4s linear;
     background-position: -3px -135px;
-    animation: ghosting-up 1s steps(1, end) infinite;
+    animation: ghosting-up 0.2s steps(1, end) infinite;
 }
 
 .ghost.ghost-pink {
@@ -63,17 +63,17 @@ body {
 
 .ghost.down {
     background-position-x: -135px;
-    animation: ghosting-down 1s steps(1, end) infinite;
+    animation: ghosting-down 0.2s steps(1, end) infinite;
 }
 
 .ghost.left {
     background-position-x: -265px;
-    animation: ghosting-left 1s steps(1, end) infinite;
+    animation: ghosting-left 0.2s steps(1, end) infinite;
 }
 
 .ghost.right {
     background-position-x: -395px;
-    animation: ghosting-right 1s steps(1, end) infinite;
+    animation: ghosting-right 0.2s steps(1, end) infinite;
 }
 
 @keyframes ghosting-up{
