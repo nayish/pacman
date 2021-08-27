@@ -49,6 +49,18 @@ body {
     animation: ghosting-up 1s steps(1, end) infinite;
 }
 
+.ghost.ghost-pink {
+    background-position-y: -200px;
+}
+
+.ghost.ghost-light-blue {
+    background-position-y: -265px;
+}
+
+.ghost.ghost-green {
+    background-position-y: -330px;
+}
+
 .ghost.down {
     background-position-x: -135px;
     animation: ghosting-down 1s steps(1, end) infinite;

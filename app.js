@@ -19,7 +19,10 @@ let types = {
     cherry: {name: 'cherry', animationSteps: 1, points: 100},
     apple: {name: 'apple', points: 200},
     banana: {name: 'banana', points: 400},
-    ghost: {name: 'ghost'},
+    lightBlueGhost: {name: 'ghost', theme: 'ghost-light-blue'},
+    redGhost: {name: 'ghost', theme: 'ghost-red'},
+    greenGhost: {name: 'ghost', theme: 'ghost-green'},
+    pinkGhost: {name: 'ghost', theme: 'ghost-pink'},
 }
 
 const nextMovePoints = [];
@@ -39,10 +42,13 @@ class Element {
 
 let elements = {
     player1: new Element('player1', types.pacman, [2,2]),
-    player2: new Element('player2', types.ghost, [3,4]),
+    ghost1: new Element('ghost1', types.lightBlueGhost, [3,4]),
+    ghost2: new Element('ghost2', types.redGhost, [3,6]),
+    ghost3: new Element('ghost3', types.greenGhost, [7,4]),
+    ghost4: new Element('ghost4', types.pinkGhost, [5,9]),
     cherry: new Element('cherry', types.cherry, [1,2]),
-    apple: new Element('cherry', types.apple, [1,1]),
-    banana: new Element('cherry', types.banana, [0,2]),
+    apple: new Element('apple', types.apple, [1,1]),
+    banana: new Element('banana', types.banana, [0,2]),
 }
 
 const temp = console.log;
@@ -86,7 +92,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     Object.values(elements).forEach(el => {
         const element = document.createElement("div");
-        element.className = `${el.type.name} element`;
+        element.className = `${el.type.name} element ${el.type.theme || ''}`;
 
         board.appendChild(element);
 
@@ -195,8 +201,8 @@ function showPoints() {
 }
 
 function checkClashes() {
-    const {player1, player2, ...els} = elements;
-    Object.values(els).forEach(el => {
+    const {player1, ...els} = elements;
+    Object.values(els).filter(el => el.type.name !== 'ghost').forEach(el => {
         if (el.position[0] === player1.position[0] && el.position[1] === player1.position[1]) {
             const column = Math.floor(Math.random() * NUMBER_OF_COLUMNS);
             const row = Math.floor(Math.random() * NUMBER_OF_ROWS);
@@ -209,10 +215,12 @@ function checkClashes() {
     });
 }
 
-setInterval(() => {
-    const dir = DIRECTIONS[Math.floor(Math.random()* DIRECTIONS.length)];
-    moveElement(elements.player2, dir);
-}, STEP_TIME*2);
+Object.values(elements).filter(el => el.type.name === 'ghost').forEach(el => {
+    setInterval(() => {
+        const dir = DIRECTIONS[Math.floor(Math.random()* DIRECTIONS.length)];
+        moveElement(el, dir);
+    }, STEP_TIME*2);
+});
 
 document.onkeydown = function(e) {
     switch (e.keyCode) {
