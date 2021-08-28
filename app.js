@@ -213,6 +213,18 @@ function checkClashes() {
             nextMovePoints.push({value: el.type.points, position})
         }
     });
+    Object.values(els).filter(el => el.type.name === 'ghost').forEach(el => {
+        if (el.position[0] === player1.position[0] && el.position[1] === player1.position[1]) {
+            //const column = Math.floor(Math.random() * NUMBER_OF_COLUMNS);
+            //const row = Math.floor(Math.random() * NUMBER_OF_ROWS);
+            //const position = el.position;
+            //el.position = [column, row];
+            //score+= el.type.points;
+            score = 0;
+            printScore();
+            //nextMovePoints.push({value: el.type.points, position})
+        }
+    });
 }
 
 Object.values(elements).filter(el => el.type.name === 'ghost').forEach(el => {
