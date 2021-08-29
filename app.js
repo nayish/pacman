@@ -119,9 +119,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 function positionElements() {
-    Object.values(elements).forEach(({element, position, currentDirection}) => {
+    Object.values(elements).forEach(({element, position}) => {
         if (element) {
-            element.style = `left: ${position[0] * CELL_SIZE + (CELL_SIZE-ELEMENT_HEIGHT)/2}; top: ${position[1] * CELL_SIZE  + (CELL_SIZE-ELEMENT_HEIGHT)/2};`;
+            setElementPosition(element, position);
         }
     });
 }
@@ -183,10 +183,12 @@ const moveElement = (el, dir, fn) => {
 }
 
 function performDir(el, dir) {
-    moveAction[dir](el);
-    el.currentDirection = dir;
-    removeClasses(el.element, DIRECTIONS);
-    addClass(el.element, el.currentDirection);
+    if (el) {
+        moveAction[dir](el);
+        el.currentDirection = dir;
+        removeClasses(el.element, DIRECTIONS);
+        addClass(el.element, el.currentDirection);
+    }
 }
 
 function showPoints() {
@@ -194,43 +196,65 @@ function showPoints() {
         const {value, position} = nextMovePoints.pop();
         const element = document.createElement("div");
         element.className = `points-${value} points element`;
-        element.style = `left: ${position[0] * CELL_SIZE + (CELL_SIZE - ELEMENT_HEIGHT) / 2}; top: ${position[1] * CELL_SIZE + (CELL_SIZE - ELEMENT_HEIGHT) / 2};`;
+        setElementPosition(element, position);
         board.appendChild(element);
         setTimeout(() => element.remove(), 2000)
     }
 }
 
 function checkClashes() {
+    checkFruitClashes();
     const {player1, ...els} = elements;
+    Object.values(els).filter(el => el.type.name === 'ghost').forEach(ghost => {
+        checkGhostClashes(player1, ghost);
+    });
+}
+
+function checkFruitClashes() {
+    const {player1, ...els} = elements;
+    if (!player1) { return; }
     Object.values(els).filter(el => el.type.name !== 'ghost').forEach(el => {
         if (el.position[0] === player1.position[0] && el.position[1] === player1.position[1]) {
-            const column = Math.floor(Math.random() * NUMBER_OF_COLUMNS);
-            const row = Math.floor(Math.random() * NUMBER_OF_ROWS);
             const position = el.position;
-            el.position = [column, row];
+            el.position = generateRandomPosition();
             score+= el.type.points;
             printScore();
             nextMovePoints.push({value: el.type.points, position})
         }
     });
-    Object.values(els).filter(el => el.type.name === 'ghost').forEach(el => {
-        if (el.position[0] === player1.position[0] && el.position[1] === player1.position[1]) {
-            //const column = Math.floor(Math.random() * NUMBER_OF_COLUMNS);
-            //const row = Math.floor(Math.random() * NUMBER_OF_ROWS);
-            //const position = el.position;
-            //el.position = [column, row];
-            //score+= el.type.points;
-            score = 0;
-            printScore();
-            //nextMovePoints.push({value: el.type.points, position})
-        }
-    });
 }
 
-Object.values(elements).filter(el => el.type.name === 'ghost').forEach(el => {
+function checkGhostClashes(player, ghost) {
+    if (player && ghost.position[0] === player.position[0] && ghost.position[1] === player.position[1]) {
+        score = 0;
+        printScore();
+
+        const rip = document.createElement("div");
+        rip.className = `rip element`;
+        setElementPosition(rip, ghost.position);
+        board.appendChild(rip);
+        const player1 = elements.player1;
+        player1.element.remove();
+        delete elements.player1;
+        setTimeout(() => {
+            board.appendChild(player1.element);
+            player1.position =[5,5];
+            setElementPosition(player1.element, player1.position);
+            elements.player1 = player1;
+            rip.remove()
+        }, 3000)
+    }
+}
+
+function setElementPosition(element, position) {
+    element.style = `left: ${position[0] * CELL_SIZE + (CELL_SIZE - ELEMENT_HEIGHT) / 2}; top: ${position[1] * CELL_SIZE + (CELL_SIZE - ELEMENT_HEIGHT) / 2};`;
+}
+
+Object.values(elements).filter(el => el.type.name === 'ghost').forEach(ghost => {
     setInterval(() => {
-        const dir = DIRECTIONS[Math.floor(Math.random()* DIRECTIONS.length)];
-        moveElement(el, dir);
+        const dir = randomSelection(DIRECTIONS);
+        moveElement(ghost, dir);
+        checkGhostClashes(elements.player1, ghost);
     }, STEP_TIME*2);
 });
 
@@ -301,7 +325,6 @@ function handleMouseDown(e) {
     }, 10);
 }
 
-
 function handleMouseMove(e) {
     if (!mouseDown) {
         return;
@@ -312,4 +335,17 @@ function handleMouseMove(e) {
 function handleTouchEnd(e) {
     mouseDown = false;
     clearInterval(intervalId)
+}
+
+
+function generateRandomPosition() {
+    return [generateRandomNumber(NUMBER_OF_COLUMNS), generateRandomNumber(NUMBER_OF_ROWS)];
+}
+
+function generateRandomNumber(cap) {
+    return Math.floor(Math.random()* cap)
+}
+
+function randomSelection(arr) {
+    return arr[generateRandomNumber(arr.length)];
 }

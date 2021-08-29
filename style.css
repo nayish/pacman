@@ -152,12 +152,6 @@ body {
     67%{
         background-position: -3px -69px;
     }
-    /*75%{*/
-    /*    background-position: -3px -3px;*/
-    /*}*/
-    /*100% {*/
-    /*    background-position: -265px -3px;*/
-    /*}*/
 }
 
 .score {
@@ -184,6 +178,28 @@ body {
 .points {
     animation: disappear 2s;
     animation-fill-mode: forwards;
+}
+
+.rip {
+    animation: rip 3s;
+    animation-fill-mode: forwards;
+    background-position: -198px -465px;
+}
+
+@keyframes rip {
+    0% {
+        height: 0;
+        opacity: 1;
+        transform: translate(0, 60px);
+    }
+    50% {
+        height: 60px;
+        opacity: 1;
+        transform: translate(0, 0);
+    }
+    100% {
+        opacity: 0;
+    }
 }
 
 .points-100 {
